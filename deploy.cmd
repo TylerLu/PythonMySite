@@ -54,18 +54,13 @@ goto Deployment
 :: ----------
 
 :Deployment
-echo Handling python deployment - Tyler.
+echo Handling python deployment.
 
 :: 1. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
   call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_SOURCE%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
   IF !ERRORLEVEL! NEQ 0 goto error
 )
-
-IF NOT EXIST "%DEPLOYMENT_TARGET%\requirements.txt" goto postPython
-IF EXIST "%DEPLOYMENT_TARGET%\.skipPythonDeployment" goto postPython
-
-echo Detected requirements.txt.  You can skip Python specific steps with a .skipPythonDeployment file.
 
 :: 2. Set Python version
 SET PYTHON_RUNTIME=python-3.5.3
@@ -97,9 +92,11 @@ echo Pip install Django.
 env\scripts\pip install django
 IF !ERRORLEVEL! NEQ 0 goto error
 
-echo Pip install requirements.
-env\scripts\pip install -r requirements.txt
-IF !ERRORLEVEL! NEQ 0 goto error
+IF EXIST "%DEPLOYMENT_TARGET%\requirements.txt" goto postPython (
+  echo Pip install requirements.
+  env\scripts\pip install -r requirements.txt
+  IF !ERRORLEVEL! NEQ 0 goto error
+)
 
 REM Add additional package installation here
 REM -- Example --
