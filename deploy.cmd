@@ -92,7 +92,7 @@ echo Pip install Django.
 %PYTHON_EXE% -m pip install django
 IF !ERRORLEVEL! NEQ 0 goto error
 
-IF EXIST "%DEPLOYMENT_TARGET%\requirements.txt" goto postPython (
+IF EXIST "%DEPLOYMENT_TARGET%\requirements.txt" (
   echo Pip install requirements.
   %PYTHON_EXE% -m pip install -r requirements.txt
   IF !ERRORLEVEL! NEQ 0 goto error
