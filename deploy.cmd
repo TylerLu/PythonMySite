@@ -54,7 +54,7 @@ goto Deployment
 :: ----------
 
 :Deployment
-echo Handling python deployment.
+echo Handling python deployment - Tyler.
 
 :: 1. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
